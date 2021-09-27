@@ -45,41 +45,37 @@ export default class {
         .bills()
         .get()
         .then((snapshot) => {
-          const billsSort = snapshot.docs
+          const bills = snapshot.docs
             .map((doc) => {
-              return doc.data();
-            })
-            .sort((a, b) => {
-              return new Date(b.date) - new Date(a.date);
-            })
-            .reverse();
-
-          // console.log(billsSort.map((doc) => doc.date));
-
-          const bills = billsSort
-            .map((doc) => {
-              // console.log(typeof doc.data().date);
               try {
                 return {
-                  ...doc,
-                  date: formatDate(doc.date),
-                  status: formatStatus(doc.status),
+                  ...doc.data(),
+                  // date: formatDate(doc.date),
+                  status: formatStatus(doc.data().status),
                 };
               } catch (e) {
                 // if for some reason, corrupted data was introduced, we manage here failing formatDate function
                 // log the error and return unformatted date in that case
                 // console.log(e, "for", doc.data());
                 return {
-                  ...doc,
-                  date: doc.date,
-                  status: formatStatus(doc.status),
+                  ...doc.data(),
+                  date: doc.data().date,
+                  status: formatStatus(doc.data().status),
                 };
               }
             })
-            .filter((bill) => bill.email === userEmail); // .sort(bill => bill.status)
+            .filter((bill) => bill.email === userEmail)
+            .sort((a, b) => {
+              return new Date(a.date) - new Date(b.date);
+            })
+            .reverse();
+
           // console.log("length", bills.length);
-          console.log(bills);
-          return bills;
+
+          return bills.map((bill) => {
+            bill.date = formatDate(bill.date);
+            return bill;
+          });
         })
         .catch((error) => error);
     }
