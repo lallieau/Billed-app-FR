@@ -9,7 +9,12 @@ export default class NewBill {
     const formNewBill = this.document.querySelector(
       `form[data-testid="form-new-bill"]`
     );
-    formNewBill.addEventListener("submit", this.handleSubmit);
+    formNewBill.addEventListener("submit", (e) => {
+      // console.log(this.handleChangeFile === true);
+      // if (this.handleChangeFile) {
+      this.handleSubmit(e);
+      // }
+    });
     const file = this.document.querySelector(`input[data-testid="file"]`);
     file.addEventListener("change", this.handleChangeFile);
     this.fileUrl = null;
@@ -23,21 +28,27 @@ export default class NewBill {
     const filePath = e.target.value.split(/\\/g);
     const fileName = filePath[filePath.length - 1];
 
-    // const checkExtension = (fileName) => {
-    //   const ext = [".jpg", ".jpeg", ".png"];
-    //   return ext.some((el) => fileName.endsWith(el));
-    // };
+    const checkExtension = (fileName) => {
+      const ext = [".jpg", ".jpeg", ".png"];
 
-    // checkExtension(fileName);
+      if (ext.some((el) => fileName.endsWith(el))) {
+        this.firestore.storage
+          .ref(`justificatifs/${fileName}`)
+          .put(file)
+          .then((snapshot) => snapshot.ref.getDownloadURL())
+          .then((url) => {
+            this.fileUrl = url;
+            this.fileName = fileName;
+          });
+      } else {
+        alert("Only jpg/jpeg and png files are allowed!");
 
-    this.firestore.storage
-      .ref(`justificatifs/${fileName}`)
-      .put(file)
-      .then((snapshot) => snapshot.ref.getDownloadURL())
-      .then((url) => {
-        this.fileUrl = url;
-        this.fileName = fileName;
-      });
+        file.value = null;
+        console.log(file.value);
+      }
+    };
+
+    return checkExtension(fileName);
   };
 
   handleSubmit = (e) => {
