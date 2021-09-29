@@ -29,9 +29,10 @@ export default class NewBill {
     const fileName = filePath[filePath.length - 1];
 
     const checkExtension = (fileName) => {
-      const ext = [".jpg", ".jpeg", ".png"];
+      const ext = ["image/jpg", "image/jpeg", "image/png"];
 
-      if (ext.some((el) => fileName.endsWith(el))) {
+      if (ext.some((el) => file.type === el)) {
+        console.log(file.type);
         this.firestore.storage
           .ref(`justificatifs/${fileName}`)
           .put(file)
@@ -42,9 +43,7 @@ export default class NewBill {
           });
       } else {
         alert("Only jpg/jpeg and png files are allowed!");
-
-        file.value = null;
-        console.log(file.value);
+        console.log(file.type);
       }
     };
 
