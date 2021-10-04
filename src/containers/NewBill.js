@@ -23,16 +23,17 @@ export default class NewBill {
   }
 
   handleChangeFile = (e) => {
+    document.getElementById("wrongFileTypeError").classList.add("hidden");
+
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
     const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
+    let fileName = filePath[filePath.length - 1];
 
     const checkExtension = (fileName) => {
       const ext = ["image/jpg", "image/jpeg", "image/png"];
 
       if (ext.some((el) => file.type === el)) {
-        console.log(file.type);
         this.firestore.storage
           .ref(`justificatifs/${fileName}`)
           .put(file)
@@ -42,8 +43,11 @@ export default class NewBill {
             this.fileName = fileName;
           });
       } else {
-        alert("Only jpg/jpeg and png files are allowed!");
-        console.log(file.type);
+        document
+          .getElementById("wrongFileTypeError")
+          .classList.remove("hidden");
+        this.document.querySelector(`input[data-testid="file"]`).value = null;
+        fileName = "";
       }
     };
 

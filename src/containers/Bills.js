@@ -1,5 +1,5 @@
 import { ROUTES_PATH } from "../constants/routes.js";
-import { formatDate, formatStatus } from "../app/format.js";
+import { formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
 
 export default class {
@@ -50,7 +50,7 @@ export default class {
               try {
                 return {
                   ...doc.data(),
-                  // date: formatDate(doc.date),
+                  date: doc.data().date,
                   status: formatStatus(doc.data().status),
                 };
               } catch (e) {
@@ -64,16 +64,10 @@ export default class {
                 };
               }
             })
-            .filter((bill) => bill.email === userEmail)
-            .sort((a, b) => {
-              return new Date(a.date) - new Date(b.date);
-            })
-            .reverse();
-
-          // console.log("length", bills.length);
+            .filter((bill) => bill.email === userEmail);
 
           return bills.map((bill) => {
-            bill.date = formatDate(bill.date);
+            // bill.date = formatDate(bill.date);
             return bill;
           });
         })
