@@ -97,7 +97,7 @@ export default class {
 
   handleEditTicket(e, bill, bills) {
     e.preventDefault();
-    console.log("edit", bill, bills);
+    console.log("edit", bill);
 
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0;
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id;
@@ -172,14 +172,21 @@ export default class {
     }
 
     billsByStatus.forEach((bill) => {
-      // console.log(document.querySelector(`#open-bill${bill.id}`));
-
+      console.log(bill);
       $(`#open-bill${bill.id}`).click((e) =>
         this.handleEditTicket(e, bill, bills)
       );
     });
 
+    // bills.forEach((bill) => {
+    //   console.log(bill);
+    //   $(`#open-bill${bill.id}`).click((e) => {
+    //     this.handleEditTicket(e, bill, bills);
+    //   });
+    // });
+
     return billsByStatus;
+    // return bills;
   }
 
   // not need to cover this function by tests
