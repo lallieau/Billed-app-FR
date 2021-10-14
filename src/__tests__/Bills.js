@@ -16,13 +16,12 @@ describe("Given I am connected as an employee", () => {
       expect(iconBackground === verticalLayoutBackground).toBeFalsy();
     });
 
+    // this test failed so it has been fixed (date sorting bug)
     test("Then bills should be ordered from earliest to latest", () => {
       const html = BillsUI({ data: bills });
       document.body.innerHTML = html;
       const dates = screen
-        .getAllByText(
-          /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
-        )
+        .getAllByText(/(?<day>\d?\d)\s+(?<month>\w.+)[.]\s+(?<year>\d\d)/)
         .map((a) => a.innerHTML);
       const antiChrono = (a, b) => (a < b ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
@@ -30,26 +29,29 @@ describe("Given I am connected as an employee", () => {
     });
   });
 
+  // the same tests as on the dashboard, replace DashboardUI with BillsUI
+
   describe("When I am on Bills Page but it is loading", () => {
-    test("Then a loading page should be displayed", () => {
+    test("Then, Loading page should be rendered", () => {
       const html = BillsUI({ loading: true });
       document.body.innerHTML = html;
       expect(screen.getAllByText("Loading...")).toBeTruthy();
     });
   });
+
   describe("When I am on Bills Page but it is loading", () => {
-    test("Then an error page should be displayed", () => {
-      const html = BillsUI({ error: "error message" });
+    test("Then, Error page should be rendered", () => {
+      const html = BillsUI({ error: "some error message" });
       document.body.innerHTML = html;
       expect(screen.getAllByText("Erreur")).toBeTruthy();
     });
   });
 
-  // HandleClickIconEye method (test récupéré de __test__/Dashboard.js)
+  // HandleClickIconEye method
+  // the same test as on the dashboard but readjusted
 
   describe("When I am on Bills Page and I click on the icon eye", () => {
     test("Then a modal should open", () => {
-      // à revoir
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
@@ -63,7 +65,6 @@ describe("Given I am connected as an employee", () => {
       const html = BillsUI({ data: bills });
       document.body.innerHTML = html;
 
-      // à revoir
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname });
       };
@@ -75,7 +76,6 @@ describe("Given I am connected as an employee", () => {
         localStorage: window.localStorage,
       });
 
-      // à revoir
       $.fn.modal = jest.fn();
 
       const handleClickIconEye = jest.fn(bill.handleClickIconEye);
@@ -92,11 +92,11 @@ describe("Given I am connected as an employee", () => {
     });
   });
 
-  // HandleClickNewBill method (test récupéré de __test__/Dashboard.js et réajusté)
+  // HandleClickNewBill method
+  // the same test as for the HandleClickIconEye method but readjusted
 
   describe("When I am on Bills Page and I click on the New bill Button", () => {
     test("Then A new Bill Page is displayed", () => {
-      // à revoir
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
@@ -110,7 +110,6 @@ describe("Given I am connected as an employee", () => {
       const html = BillsUI({ data: bills });
       document.body.innerHTML = html;
 
-      // à revoir
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname });
       };
@@ -122,7 +121,6 @@ describe("Given I am connected as an employee", () => {
         localStorage: window.localStorage,
       });
 
-      // à revoir
       const handleClickNewBill = jest.fn(bill.handleClickNewBill);
       const buttonNewBill = screen.getByTestId("btn-new-bill");
       buttonNewBill.addEventListener("click", handleClickNewBill);
