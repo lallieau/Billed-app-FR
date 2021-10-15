@@ -10,10 +10,7 @@ export default class NewBill {
       `form[data-testid="form-new-bill"]`
     );
     formNewBill.addEventListener("submit", (e) => {
-      // console.log(this.handleChangeFile === true);
-      // if (this.handleChangeFile) {
       this.handleSubmit(e);
-      // }
     });
     const file = this.document.querySelector(`input[data-testid="file"]`);
     file.addEventListener("change", this.handleChangeFile);
@@ -56,10 +53,7 @@ export default class NewBill {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(
-    //   'e.target.querySelector(`input[data-testid="datepicker"]`).value',
-    //   e.target.querySelector(`input[data-testid="datepicker"]`).value
-    // );
+
     const email = JSON.parse(localStorage.getItem("user")).email;
     const bill = {
       email,
