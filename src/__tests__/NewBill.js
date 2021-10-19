@@ -3,6 +3,8 @@ import NewBillUI from "../views/NewBillUI.js";
 import NewBill from "../containers/NewBill.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import { ROUTES } from "../constants/routes";
+import firebase from "../__mocks__/firebase";
+import BillsUI from "../views/BillsUI";
 
 const initialize = () => {
   Object.defineProperty(window, "localStorage", {
@@ -52,6 +54,7 @@ describe("Given I am on the NewBill Page and filling out the form", () => {
       const file = screen.getByTestId("file");
       const handleChangeFile = jest.fn(newBill.handleChangeFile);
       file.addEventListener("change", handleChangeFile);
+      // ????????? (fireEvent)
       fireEvent.change(file, {
         target: {
           files: [
@@ -99,10 +102,58 @@ describe("Given I am on the NewBill Page and the form is completed", () => {
       fireEvent.submit(form);
 
       expect(handleSubmit).toHaveBeenCalled();
+      expect(screen.getByText("Mes notes de frais")).toBeTruthy();
     });
   });
+});
 
-  test("I should be redirected to the Bills page", () => {
-    expect(screen.getByText("Mes notes de frais")).toBeTruthy();
+// test d'intégration POST
+describe("Given I am connected as an employee", () => {
+  describe("When I navigate to NewBill", () => {
+    test("send a bill to mock API POST", async () => {
+      const newBill = {
+        id: "47qAXb6fIm2zOKkLzMzz",
+        vat: "80",
+        fileUrl: "https://test.com",
+        status: "pending",
+        type: "Hôtel et logement",
+        commentary: "séminaire billed",
+        name: "billToTest",
+        fileName: "preview-facture-free-201801-pdf-1.jpg",
+        date: "2004-04-04",
+        amount: 400,
+        commentAdmin: "ok",
+        email: "a@a",
+        pct: 20,
+      };
+
+      const postSpy = jest.spyOn(firebase, "post");
+      const bills = await firebase.post(newBill);
+
+      expect(postSpy).toHaveBeenCalledTimes(1);
+      expect(bills.data.length).toBe(1);
+    });
+
+    test("fetches bills from an API and fails with 404 message error", async () => {
+      firebase.post.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 404"))
+      );
+      const html = BillsUI({ error: "Erreur 404" });
+      document.body.innerHTML = html;
+      const message = await screen.getByText(/Erreur 404/);
+
+      expect(message).toBeTruthy();
+    });
+
+    test("fetches messages from an API and fails with 500 message error", async () => {
+      firebase.post.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 500"))
+      );
+      const html = BillsUI({ error: "Erreur 500" });
+      document.body.innerHTML = html;
+      const message = await screen.getByText(/Erreur 500/);
+
+      expect(message).toBeTruthy();
+    });
   });
 });
