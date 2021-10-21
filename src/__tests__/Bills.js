@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { fireEvent, screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
@@ -46,7 +46,7 @@ describe("Given I am connected as an employee", () => {
       const iconBackground = $("#layout-icon1").css("background-color");
       const verticalLayoutBackground = $(".vertical-navbar").css("background");
 
-      expect(iconBackground === verticalLayoutBackground).toBeFalsy;
+      expect(iconBackground === verticalLayoutBackground).toBeFalsy();
     });
 
     // this test failed so it has been fixed (date sorting bug)
@@ -71,7 +71,6 @@ describe("Given I am connected as an employee", () => {
       // add event listeners to eye icons
       iconEye.forEach((icon) => {
         icon.addEventListener("click", handleClickIconEye(icon));
-        // ?????????????? (userEvent)
         userEvent.click(icon);
       });
 
