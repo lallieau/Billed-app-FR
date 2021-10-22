@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/dom";
+import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
@@ -7,42 +7,11 @@ import { ROUTES } from "../constants/routes";
 import Bills from "../containers/Bills.js";
 import firebase from "../__mocks__/firebase";
 
-///////////////////////////////////////// ??????????????
-
-const initialize = () => {
-  Object.defineProperty(window, "localStorage", {
-    value: localStorageMock,
-  });
-
-  window.localStorage.setItem(
-    "user",
-    JSON.stringify({
-      type: "Employee",
-    })
-  );
-};
-
-const html = BillsUI({ data: bills });
-document.body.innerHTML = html;
-
-const onNavigate = (pathname) => {
-  document.body.innerHTML = ROUTES({ pathname });
-};
-const firestore = null;
-const bill = new Bills({
-  document,
-  onNavigate,
-  firestore,
-  localStorage: window.localStorage,
-});
-
-////////////////////////////////////////////
-
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
-    beforeEach(() => initialize());
-
     test("Then bill icon in vertical layout should be highlighted", () => {
+      const html = BillsUI({ data: bills });
+      document.body.innerHTML = html;
       const iconBackground = $("#layout-icon1").css("background-color");
       const verticalLayoutBackground = $(".vertical-navbar").css("background");
 
@@ -61,26 +30,71 @@ describe("Given I am connected as an employee", () => {
     });
 
     test("Then a modal should open when I click on the iconEye", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+
+      const html = BillsUI({ data: bills });
+      document.body.innerHTML = html;
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const firestore = null;
+      const bill = new Bills({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
       // mock bootstrap modal function
       $.fn.modal = jest.fn();
-      // mock handleClickIconEye
       const handleClickIconEye = jest.fn(bill.handleClickIconEye);
       const iconEye = screen.getAllByTestId("icon-eye");
       const modale = document.getElementById("modaleFile");
 
-      // add event listeners to eye icons
       iconEye.forEach((icon) => {
         icon.addEventListener("click", handleClickIconEye(icon));
         userEvent.click(icon);
       });
 
-      // check methode is called
       expect(handleClickIconEye).toHaveBeenCalled();
-      // check if modal is open
       expect(modale).toBeTruthy();
     });
 
     test("Then a new invoice page appears when I click on the NewBill button", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+
+      const html = BillsUI({ data: bills });
+      document.body.innerHTML = html;
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const firestore = null;
+      const bill = new Bills({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+
       const handleClickNewBill = jest.fn(bill.handleClickNewBill);
       const buttonNewBill = screen.getByTestId("btn-new-bill");
 

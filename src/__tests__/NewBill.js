@@ -6,38 +6,11 @@ import { ROUTES } from "../constants/routes";
 import firebase from "../__mocks__/firebase";
 import BillsUI from "../views/BillsUI";
 
-const initialize = () => {
-  Object.defineProperty(window, "localStorage", {
-    value: localStorageMock,
-  });
-  window.localStorage.setItem(
-    "user",
-    JSON.stringify({
-      type: "Employee",
-    })
-  );
-};
-
-const html = NewBillUI();
-document.body.innerHTML = html;
-
-const onNavigate = (pathname) => {
-  document.body.innerHTML = ROUTES({ pathname });
-};
-
-const firestore = null;
-const newBill = new NewBill({
-  document,
-  onNavigate,
-  firestore,
-  localStorage: window.localStorage,
-});
-
-beforeAll(() => initialize());
-
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then mail icon in vertical layout should be highlighted", () => {
+      const html = NewBillUI();
+      document.body.innerHTML = html;
       const iconBackground = $("#layout-icon2").css("background-color");
       const verticalLayoutBackground = $(".vertical-navbar").css("background");
 
@@ -47,8 +20,74 @@ describe("Given I am connected as an employee", () => {
 });
 
 describe("Given I am on the NewBill Page and filling out the form", () => {
+  describe("When I choose the correct file format to upload", () => {
+    test("Then file should be saved", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+
+      const firestore = null;
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+
+      const file = screen.getByTestId("file");
+      const handleChangeFile = jest.fn(newBill.handleChangeFile);
+      file.addEventListener("change", handleChangeFile);
+      fireEvent.change(file, {
+        target: {
+          files: [
+            new File(["invoice.png"], "invoice.png", { type: "image/png" }),
+          ],
+        },
+      });
+
+      expect(handleChangeFile).toHaveBeenCalled();
+      expect(file.files[0].name).toBe("invoice.png");
+    });
+  });
+
   describe("When I choose the wrong file format to upload", () => {
     test("An error message should be displayed", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+
+      const firestore = null;
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+
       const file = screen.getByTestId("file");
       const handleChangeFile = jest.fn(newBill.handleChangeFile);
       file.addEventListener("change", handleChangeFile);
@@ -68,31 +107,35 @@ describe("Given I am on the NewBill Page and filling out the form", () => {
       ).toBeTruthy();
     });
   });
-
-  describe("When I choose the correct file format to upload", () => {
-    test("Then file should be saved", () => {
-      const file = screen.getByTestId("file");
-      const handleChangeFile = jest.fn(newBill.handleChangeFile);
-      file.addEventListener("change", handleChangeFile);
-      fireEvent.change(file, {
-        target: {
-          files: [
-            new File(["invoice.png"], "invoice.png", { type: "image/png" }),
-          ],
-        },
-      });
-
-      expect(handleChangeFile).toHaveBeenCalled();
-      expect(file.files[0].name).toBe("invoice.png");
-    });
-  });
 });
 
 describe("Given I am on the NewBill Page and the form is completed", () => {
-  beforeEach(() => initialize());
-
   describe("When I click on the Submit NewBill button", () => {
     test("Then the form should be submitted and I should be redirected to the Bills page", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+
+      const firestore = null;
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+
       const form = screen.getByTestId("form-new-bill");
       const handleSubmit = jest.fn(newBill.handleSubmit);
       form.addEventListener("submit", handleSubmit);
