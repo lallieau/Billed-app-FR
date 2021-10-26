@@ -38,7 +38,19 @@ describe("Given I am on the NewBill Page and filling out the form", () => {
         document.body.innerHTML = ROUTES({ pathname });
       };
 
-      const firestore = null;
+      const firestore = {
+        storage: {
+          ref: () => ({
+            put: () =>
+              Promise.resolve({
+                ref: {
+                  getDownloadURL: jest.fn(),
+                },
+              }),
+          }),
+        },
+      };
+
       const newBill = new NewBill({
         document,
         onNavigate,
