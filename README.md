@@ -1,52 +1,18 @@
-**Comment lancer l'application en local** :
+# P9_Billed-app-FR_09-2021
 
-Clonez le projet :
+Openclassrooms - Parcours développeur Front-end
 
-```
-$ git clone https://github.com/OpenClassrooms-Student-Center/Billed-app-FR.git
-```
+## Projet 9 : Débuggez et testez un SaaS RH
 
-Allez au repo cloné :
+### Scénario: 
+Chez Billed, une entreprise qui produit des solutions Saas destinées aux équipes de ressources humaines. 
 
-```
-$ cd Billed-app-FR
-```
+Un collègue de l'équipe chargée de la fonctionnalité de rapport de dépenses a quitté l'entreprise avant d'avoir terminé l'application. Dans une semaine, l'équipe doit montrer la solution fonctionnelle à toute l'entreprise. Le développeur principal de l'équipe chargée de la fonctionnalité a demandé de l'aide pour respecter le délai. Description de la fonctionnalité - Il y a deux chemins d'accès à cette fonctionnalité : du côté de l'administrateur RH et du côté de l'employé. Le back-end est prêt (en version alpha). Sur le front-end, le chemin de l'administrateur RH est complet, entièrement testé et débogué.
 
-Installez les packages npm (décrits dans `package.json`) :
-
-```
-$ npm install
-```
-
-Installez live-server pour lancer un serveur local :
-
-```
-$ npm install -g live-server
-```
-
-Lancez l'application :
-
-```
-$ live-server
-```
-
-Puis allez à l'adresse : `http://127.0.0.1:8080/`
-
-**Comment lancer tous les tests en local avec Jest :**
-
-```
-$ npm run test
-```
-
-**Comment lancer un seul test :**
-
-Installez jest-cli :
-
-```
-$npm i -g jest-cli
-$jest src/__tests__/your_test_file.js
-```
-
-**Comment voir la couverture de test :**
-
-`http://127.0.0.1:8080/coverage/lcov-report/`
+### Mission :
+* Fiabiliser et améliorer le parcours employé.
+* Corriger les bugs identifiés dans le rapport de bug fourni par Jest. 
+* Corriger les bugs identifiés sur le parcours de l'employé.
+* Ajouter des tests unitaires et d'intégration pour les fichiers Bills et NewBill
+* Assurer une couverture de branche à 100% (en dehors des appels au back-end de firebase).
+* Test E2E - Réalisez un plan de test End-to-End. 
